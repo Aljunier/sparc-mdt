@@ -2,10 +2,7 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import "dotenv/config";
-
-// Route imports
-import boloRoutes from "./routes/bolosRoutes.js";
-
+import routes from "./routes/index.js";
 import { testDbConnection } from "./config/database.js";
 
 const app = express();
@@ -25,7 +22,7 @@ if (process.env.NODE_ENV !== "production") {
 app.use(express.json());
 
 // Routes
-app.use("/api/bolos", boloRoutes);
+app.use("/api", routes);
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
