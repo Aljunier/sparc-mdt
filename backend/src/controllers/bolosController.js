@@ -25,11 +25,15 @@ export async function getBoloSummary(_, res) {
 // Get all details from a specific bolo from its id
 export async function getBolo(req, res) {
   try {
+    // Sanitize
     const id = sanitizeInteger(req.params.id);
+
+    // Validate
     if (!isValidInteger(id)) {
       return res.status(400).json({ message: "Invalid bolo ID" });
     }
 
+    // Fetch
     const [bolo] = await Bolo.getBolo(id);
     if (!bolo) return res.status(404).json({ message: "Bolo not found" });
     res.status(200).json(bolo);
@@ -42,7 +46,7 @@ export async function getBolo(req, res) {
 // Create new bolo
 export async function createBolo(req, res) {
   try {
-    // Sanitize and prepare bolo data
+    // Sanitize
     const body = req.body;
     const sanitizedData = {
       issued_by: sanitizeInteger(body.issued_by),
@@ -67,7 +71,7 @@ export async function createBolo(req, res) {
         : new Date(Date.now() + 24 * 60 * 60 * 1000 * 7),
     };
 
-    // Validate bolo data
+    // Validate
     const { valid, errors } = validateBolo(sanitizedData);
     if (!valid) {
       return res
@@ -75,6 +79,7 @@ export async function createBolo(req, res) {
         .json({ message: "Validation errors occurred", errors });
     }
 
+    // Create
     const newBolo = await Bolo.createBolo(sanitizedData);
     res.status(201).json(newBolo);
   } catch (error) {
@@ -86,15 +91,15 @@ export async function createBolo(req, res) {
 // Update bolo
 export async function updateBolo(req, res) {
   try {
-    const id = sanitizeInteger(req.params.id);
     const body = req.body;
 
-    // Validate bolo ID
+    // Sanitize and validate id before proceeding
+    const id = sanitizeInteger(req.params.id);
     if (!isValidInteger(id)) {
       return res.status(400).json({ message: "Invalid bolo ID" });
     }
 
-    // Sanitize and prepare bolo data
+    // Sanitize
     const sanitizedData = {
       issued_by: sanitizeInteger(body.issued_by),
       report_id: body.report_id ? sanitizeInteger(body.report_id) : null,
@@ -113,7 +118,7 @@ export async function updateBolo(req, res) {
         : new Date(Date.now() + 24 * 60 * 60 * 1000 * 7),
     };
 
-    // Validate bolo data
+    // Validate
     const { valid, errors } = validateBolo(sanitizedData);
     if (!valid) {
       return res
@@ -121,6 +126,7 @@ export async function updateBolo(req, res) {
         .json({ message: "Validation errors occurred", errors });
     }
 
+    // Update
     const updatedBolo = await Bolo.updateBolo(id, sanitizedData);
     if (!updatedBolo)
       return res.status(404).json({ message: "Bolo not found" });
@@ -135,11 +141,15 @@ export async function updateBolo(req, res) {
 // Delete bolo
 export async function deleteBolo(req, res) {
   try {
+    // Sanitize
     const id = sanitizeInteger(req.params.id);
+
+    // Validate
     if (!isValidInteger(id)) {
       return res.status(400).json({ message: "Invalid bolo ID" });
     }
 
+    // Delete
     const deletedBolo = await Bolo.deleteBolo(id);
     if (!deletedBolo)
       return res.status(404).json({ message: "Bolo not found" });
@@ -153,14 +163,18 @@ export async function deleteBolo(req, res) {
 // Vehicles Bolos //
 export async function createBoloVehicle(req, res) {
   try {
+    // Sanitize
     const bolo_id = sanitizeInteger(req.params.bolo_id);
     const vehicle_id = sanitizeInteger(req.body.vehicle_id);
+
+    // Validate
     if (!isValidInteger(bolo_id)) {
       return res.status(400).json({ message: "Invalid bolo ID" });
     } else if (!isValidInteger(vehicle_id)) {
       return res.status(400).json({ message: "Invalid vehicle ID" });
     }
 
+    // Create
     const newBoloVehicle = await Bolo.createBoloVehicle(bolo_id, vehicle_id);
     if (!newBoloVehicle)
       return res.status(404).json({
@@ -176,16 +190,18 @@ export async function createBoloVehicle(req, res) {
 
 export async function deleteBoloVehicle(req, res) {
   try {
+    // Sanitize
     const bolo_id = sanitizeInteger(req.params.bolo_id);
     const vehicle_id = sanitizeInteger(req.params.id);
 
-    // Validate IDs
+    // Validate
     if (!isValidInteger(bolo_id)) {
       return res.status(400).json({ message: "Invalid bolo ID" });
     } else if (!isValidInteger(vehicle_id)) {
       return res.status(400).json({ message: "Invalid vehicle ID" });
     }
 
+    // Delete
     const deletedBoloVehicle = await Bolo.deleteBoloVehicle(
       bolo_id,
       vehicle_id
@@ -202,6 +218,7 @@ export async function deleteBoloVehicle(req, res) {
 // Persons Bolos //
 export async function createBoloPerson(req, res) {
   try {
+    // Sanitize
     const bolo_id = sanitizeInteger(req.params.bolo_id);
     const person_id = sanitizeInteger(req.body.person_id);
     const role = sanitizeEnum(
@@ -210,7 +227,7 @@ export async function createBoloPerson(req, res) {
       null
     );
 
-    // Validate IDs and role
+    // Validate
     if (!isValidInteger(bolo_id)) {
       return res.status(400).json({ message: "Invalid bolo ID" });
     } else if (!isValidInteger(person_id)) {
@@ -221,6 +238,7 @@ export async function createBoloPerson(req, res) {
       return res.status(400).json({ message: "Invalid role" });
     }
 
+    // Create
     const newBoloPerson = await Bolo.createBoloPerson(bolo_id, {
       person_id,
       role,
@@ -239,6 +257,7 @@ export async function createBoloPerson(req, res) {
 
 export async function updateBoloPerson(req, res) {
   try {
+    // Sanitize
     const bolo_id = sanitizeInteger(req.params.bolo_id);
     const person_id = sanitizeInteger(req.params.id);
     const role = sanitizeEnum(
@@ -247,8 +266,7 @@ export async function updateBoloPerson(req, res) {
       null
     );
 
-    console.log(role);
-    // Validate IDs and role
+    // Validate
     if (!isValidInteger(bolo_id)) {
       return res.status(400).json({ message: "Invalid bolo ID" });
     } else if (!isValidInteger(person_id)) {
@@ -259,6 +277,7 @@ export async function updateBoloPerson(req, res) {
       return res.status(400).json({ message: "Invalid role" });
     }
 
+    // Update
     const updatedBoloPerson = await Bolo.updateBoloPerson(bolo_id, {
       person_id,
       role,
@@ -274,16 +293,18 @@ export async function updateBoloPerson(req, res) {
 
 export async function deleteBoloPerson(req, res) {
   try {
+    // Sanitize
     const bolo_id = sanitizeInteger(req.params.bolo_id);
     const person_id = sanitizeInteger(req.params.id);
 
-    // Validate IDs
+    // Validate
     if (!isValidInteger(bolo_id)) {
       return res.status(400).json({ message: "Invalid bolo ID" });
     } else if (!isValidInteger(person_id)) {
       return res.status(400).json({ message: "Invalid person ID" });
     }
 
+    // Delete
     const deletedBoloPerson = await Bolo.deleteBoloPerson(bolo_id, person_id);
     if (!deletedBoloPerson)
       return res.status(404).json({ message: "Bolo or person not found" });
