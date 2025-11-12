@@ -25,7 +25,6 @@ export async function getRole(id) {
 // Expected fields: { category_id, name, is_active (optional) }
 export async function createRole(fields) {
   const { query, values } = buildInsertQuery("roles", fields);
-  console.log(fields, query, values);
   const [result] = await db.execute(query, values);
   return getRole(result.insertId);
 }
