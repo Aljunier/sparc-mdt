@@ -1,10 +1,12 @@
-// allowedNulls is an array of field names that won't be included in the query if their value is null. They can also be undefined. This allows the database to apply default values.
+// allowedNulls is an array of field names that are allowed to be null
+// when building the query. If a field is null and not in this array, it will
+// be excluded from the query, meaning it won't be updated or inserted.
+
 export function buildInsertQuery(table, fields, allowedNulls = []) {
   const filteredFields = Object.entries(fields).filter(([key, value]) => {
-    // Skip undefined values
+    // Do not include undefined values
     if (value === undefined) return false;
-    // Skip null values unless allowed
-    // Unallowed null values can be used to set default DB values
+    // Do not include null values unless allowed
     if (value === null && !allowedNulls.includes(key)) return false;
     return true;
   });
@@ -27,10 +29,9 @@ export function buildUpdateQuery(
   idField = "id"
 ) {
   const filteredFields = Object.entries(fields).filter(([key, value]) => {
-    // Skip undefined values
+    // Do not include undefined values
     if (value === undefined) return false;
-    // Skip null values unless allowed
-    // Unallowed null values can be used to ignore updating that field
+    // Do not include null values unless allowed
     if (value === null && !allowedNulls.includes(key)) return false;
     return true;
   });
