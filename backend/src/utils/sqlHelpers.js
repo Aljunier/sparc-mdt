@@ -1,3 +1,4 @@
+// allowedNulls is an array of field names that won't be included in the query if their value is null. They can also be undefined. This allows the database to apply default values.
 export function buildInsertQuery(table, fields, allowedNulls = []) {
   const filteredFields = Object.entries(fields).filter(([key, value]) => {
     // Skip undefined values
