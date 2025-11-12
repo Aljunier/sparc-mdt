@@ -1,5 +1,19 @@
 import { dbPool as db } from "../config/database.js";
 
+/*
+
+Usage (inside controller):
+
+import { logActivity } from "../utils/logActivity.js";
+logActivity({
+  user_id: null, // Can be null for system actions
+  action: "create", // e.g., "create", "update", "delete"
+  entity_type: "role", // e.g., "user", "role", "permission"
+  entity_id: newRole.id, // ID of the affected entity, can be null
+}).catch((err) => console.error("[logActivity] Error:", err.message));
+
+*/
+
 export async function logActivity({
   user_id,
   entity_type,
