@@ -80,3 +80,31 @@ export function validateBolo(data) {
     errors,
   };
 }
+
+// Validate User Notification //
+export function validateUserNotification(data) {
+  const errors = [];
+
+  // User ID: required
+  if (!isValidInteger(data.user_id)) {
+    errors.push("User ID must be a valid integer.");
+  }
+
+  // Type: required
+  if (!isValidEnum(data.type, ["general", "error", "success"])) {
+    errors.push("Type must be one of: general, error, success.");
+  }
+  // Title: required
+  if (!isNonEmptyString(data.title)) {
+    errors.push("Title is required and must be a non-empty string.");
+  }
+  // Message: required
+  if (!isNonEmptyString(data.message)) {
+    errors.push("Message is required and must be a non-empty string.");
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+}
