@@ -9,16 +9,32 @@ import {
   validateBolo,
   isValidInteger,
   isValidEnum,
+  validatePaginationParams,
 } from "../utils/validate.js";
+import * as api from "../utils/apiResponse.js";
+import { logAct } from "../utils/logActivity.js";
 
 // Get all uncancelled bolos with limited details
-export async function getBoloSummary(_, res) {
+export async function getBoloSummary(req, res) {
   try {
-    const bolos = await Bolo.getBoloSummary();
-    res.status(200).json(bolos);
+    // Sanitize
+    const page = sanitizeInteger(req.query.page) || 1;
+    const pageSize = sanitizeInteger(req.query.limit) || 10;
+
+    // Validate
+    const { valid, errors } = validatePaginationParams(page, pageSize);
+    if (!valid) {
+      return api.sendError(res, 400, "Invalid pagination parameters", errors);
+    }
+
+    // Fetch
+    const bolos = await Bolo.getBoloSummary(page, pageSize);
+    return api.sendSuccess(res, bolos.data, 200, {
+      pagination: bolos.pagination,
+    });
   } catch (error) {
     console.error("[getBoloSummary] Error fetching bolo summary:", error);
-    res.status(500).json({ message: "Internal server error" });
+    api.sendError(res, 500, "Internal server error");
   }
 }
 
@@ -30,16 +46,16 @@ export async function getBolo(req, res) {
 
     // Validate
     if (!isValidInteger(id)) {
-      return res.status(400).json({ message: "Invalid bolo ID" });
+      return api.sendError(res, 400, "Invalid bolo id");
     }
 
     // Fetch
-    const [bolo] = await Bolo.getBolo(id);
-    if (!bolo) return res.status(404).json({ message: "Bolo not found" });
-    res.status(200).json(bolo);
+    const bolo = await Bolo.getBolo(id);
+    if (!bolo) return api.sendError(res, 404, "Bolo not found");
+    api.sendSuccess(res, bolo);
   } catch (error) {
     console.error("[getBolo] Error fetching bolo:", error);
-    res.status(500).json({ message: "Internal server error" });
+    api.sendError(res, 500, "Internal server error");
   }
 }
 
@@ -74,17 +90,23 @@ export async function createBolo(req, res) {
     // Validate
     const { valid, errors } = validateBolo(sanitizedData);
     if (!valid) {
-      return res
-        .status(400)
-        .json({ message: "Validation errors occurred", errors });
+      return api.sendError(res, 400, "Validation errors occurred", errors);
     }
 
     // Create
-    const newBolo = await Bolo.createBolo(sanitizedData);
-    res.status(201).json(newBolo);
+    const result = await Bolo.createBolo(sanitizedData);
+    api.sendSuccess(res, result, 201);
+
+    // Log
+    logAct({
+      user_id: sanitizedData.issued_by,
+      entity_type: "bolo",
+      action: "create",
+      entity_id: result.id,
+    });
   } catch (error) {
     console.error("[createBolo] Error creating bolo:", error);
-    res.status(500).json({ message: "Internal server error" });
+    api.sendError(res, 500, "Internal server error");
   }
 }
 
@@ -96,7 +118,7 @@ export async function updateBolo(req, res) {
     // Sanitize and validate id before proceeding
     const id = sanitizeInteger(req.params.id);
     if (!isValidInteger(id)) {
-      return res.status(400).json({ message: "Invalid bolo ID" });
+      return api.sendError(res, 400, "Invalid bolo id");
     }
 
     // Sanitize
@@ -121,20 +143,24 @@ export async function updateBolo(req, res) {
     // Validate
     const { valid, errors } = validateBolo(sanitizedData);
     if (!valid) {
-      return res
-        .status(400)
-        .json({ message: "Validation errors occurred", errors });
+      return api.sendError(res, 400, "Validation errors occurred", errors);
     }
 
     // Update
     const updatedBolo = await Bolo.updateBolo(id, sanitizedData);
-    if (!updatedBolo)
-      return res.status(404).json({ message: "Bolo not found" });
+    if (!updatedBolo) return api.sendError(res, 404, "Bolo not found");
+    api.sendSuccess(res, updatedBolo);
 
-    res.status(200).json(updatedBolo);
+    // Log
+    logAct({
+      user_id: sanitizedData.issued_by,
+      entity_type: "bolo",
+      action: "update",
+      entity_id: updatedBolo.id,
+    });
   } catch (error) {
     console.error("[updateBolo] Error updating bolo:", error);
-    res.status(500).json({ message: "Internal server error" });
+    api.sendError(res, 500, "Internal server error");
   }
 }
 
@@ -146,17 +172,24 @@ export async function deleteBolo(req, res) {
 
     // Validate
     if (!isValidInteger(id)) {
-      return res.status(400).json({ message: "Invalid bolo ID" });
+      return api.sendError(res, 400, "Invalid bolo id");
     }
 
     // Delete
     const deletedBolo = await Bolo.deleteBolo(id);
-    if (!deletedBolo)
-      return res.status(404).json({ message: "Bolo not found" });
-    res.status(200).json({ message: "Bolo deleted successfully" });
+    if (!deletedBolo) return api.sendError(res, 404, "Bolo not found");
+    api.sendSuccess(res, { message: "Bolo deleted successfully" });
+
+    // Log
+    logAct({
+      user_id: req.user?.id || null,
+      entity_type: "bolo",
+      action: "delete",
+      entity_id: id,
+    });
   } catch (error) {
     console.error("[deleteBolo] Error deleting bolo:", error);
-    res.status(500).json({ message: "Internal server error" });
+    api.sendError(res, 500, "Internal server error");
   }
 }
 
@@ -169,22 +202,31 @@ export async function createBoloVehicle(req, res) {
 
     // Validate
     if (!isValidInteger(bolo_id)) {
-      return res.status(400).json({ message: "Invalid bolo ID" });
+      return api.sendError(res, 400, "Invalid bolo id");
     } else if (!isValidInteger(vehicle_id)) {
-      return res.status(400).json({ message: "Invalid vehicle ID" });
+      return api.sendError(res, 400, "Invalid vehicle id");
     }
 
     // Create
     const newBoloVehicle = await Bolo.createBoloVehicle(bolo_id, vehicle_id);
     if (!newBoloVehicle)
-      return res.status(404).json({
-        message:
-          "Bolo or vehicle not found. Or vehicle already exists in this bolo.",
-      });
-    res.status(201).json(newBoloVehicle);
+      return api.sendError(
+        res,
+        404,
+        "Bolo or vehicle not found. Or vehicle already exists in this bolo."
+      );
+    api.sendSuccess(res, newBoloVehicle, 201);
+
+    // Log
+    logAct({
+      user_id: req.user?.id || null,
+      entity_type: "bolo_vehicle",
+      action: "create",
+      entity_id: `${bolo_id}-${vehicle_id}`,
+    });
   } catch (error) {
     console.error("[createBoloVehicle] Error creating bolo vehicle:", error);
-    res.status(500).json({ message: "Internal server error" });
+    api.sendError(res, 500, "Internal server error");
   }
 }
 
@@ -196,9 +238,9 @@ export async function deleteBoloVehicle(req, res) {
 
     // Validate
     if (!isValidInteger(bolo_id)) {
-      return res.status(400).json({ message: "Invalid bolo ID" });
+      return api.sendError(res, 400, "Invalid bolo id");
     } else if (!isValidInteger(vehicle_id)) {
-      return res.status(400).json({ message: "Invalid vehicle ID" });
+      return api.sendError(res, 400, "Invalid vehicle id");
     }
 
     // Delete
@@ -207,11 +249,19 @@ export async function deleteBoloVehicle(req, res) {
       vehicle_id
     );
     if (!deletedBoloVehicle)
-      return res.status(404).json({ message: "Bolo or vehicle not found" });
-    res.status(200).json({ message: "Bolo vehicle deleted successfully" });
+      return api.sendError(res, 404, "Bolo or vehicle not found");
+    api.sendSuccess(res, { message: "Bolo vehicle deleted successfully" });
+
+    // Log
+    logAct({
+      user_id: req.user?.id || null,
+      entity_type: "bolo_vehicle",
+      action: "delete",
+      entity_id: `${bolo_id}-${vehicle_id}`,
+    });
   } catch (error) {
     console.error("[deleteBoloVehicle] Error deleting bolo vehicle:", error);
-    res.status(500).json({ message: "Internal server error" });
+    api.sendError(res, 500, "Internal server error");
   }
 }
 
@@ -229,13 +279,13 @@ export async function createBoloPerson(req, res) {
 
     // Validate
     if (!isValidInteger(bolo_id)) {
-      return res.status(400).json({ message: "Invalid bolo ID" });
+      return api.sendError(res, 400, "Invalid bolo id");
     } else if (!isValidInteger(person_id)) {
-      return res.status(400).json({ message: "Invalid person ID" });
+      return api.sendError(res, 400, "Invalid person id");
     } else if (
       !isValidEnum(role, ["suspect", "victim", "witness", "unknown", null])
     ) {
-      return res.status(400).json({ message: "Invalid role" });
+      return api.sendError(res, 400, "Invalid role");
     }
 
     // Create
@@ -244,14 +294,22 @@ export async function createBoloPerson(req, res) {
       role,
     });
     if (!newBoloPerson)
-      return res.status(404).json({
+      return api.sendError(res, 404, {
         message:
           "Bolo or person not found. Or person already exists in this bolo.",
       });
-    res.status(201).json(newBoloPerson);
+    api.sendSuccess(res, newBoloPerson, 201);
+
+    // Log
+    logAct({
+      user_id: req.user?.id || null,
+      entity_type: "bolo_person",
+      action: "create",
+      entity_id: `${bolo_id}-${person_id}`,
+    });
   } catch (error) {
     console.error("[createBoloPerson] Error creating bolo person:", error);
-    res.status(500).json({ message: "Internal server error" });
+    api.sendError(res, 500, "Internal server error");
   }
 }
 
@@ -268,13 +326,13 @@ export async function updateBoloPerson(req, res) {
 
     // Validate
     if (!isValidInteger(bolo_id)) {
-      return res.status(400).json({ message: "Invalid bolo ID" });
+      return api.sendError(res, 400, "Invalid bolo id");
     } else if (!isValidInteger(person_id)) {
-      return res.status(400).json({ message: "Invalid person ID" });
+      return api.sendError(res, 400, "Invalid person id");
     } else if (
       !isValidEnum(role, ["suspect", "victim", "witness", "unknown"])
     ) {
-      return res.status(400).json({ message: "Invalid role" });
+      return api.sendError(res, 400, "Invalid role");
     }
 
     // Update
@@ -283,11 +341,19 @@ export async function updateBoloPerson(req, res) {
       role,
     });
     if (!updatedBoloPerson)
-      return res.status(404).json({ message: "Bolo or person not found" });
-    res.status(200).json(updatedBoloPerson);
+      return api.sendError(res, 404, "Bolo or person not found");
+    api.sendSuccess(res, updatedBoloPerson);
+
+    // Log
+    logAct({
+      user_id: req.user?.id || null,
+      entity_type: "bolo_person",
+      action: "update",
+      entity_id: `${bolo_id}-${person_id}`,
+    });
   } catch (error) {
     console.error("[updateBoloPerson] Error updating bolo person:", error);
-    res.status(500).json({ message: "Internal server error" });
+    api.sendError(res, 500, "Internal server error");
   }
 }
 
@@ -299,18 +365,26 @@ export async function deleteBoloPerson(req, res) {
 
     // Validate
     if (!isValidInteger(bolo_id)) {
-      return res.status(400).json({ message: "Invalid bolo ID" });
+      return api.sendError(res, 400, "Invalid bolo id");
     } else if (!isValidInteger(person_id)) {
-      return res.status(400).json({ message: "Invalid person ID" });
+      return api.sendError(res, 400, "Invalid person id");
     }
 
     // Delete
     const deletedBoloPerson = await Bolo.deleteBoloPerson(bolo_id, person_id);
     if (!deletedBoloPerson)
-      return res.status(404).json({ message: "Bolo or person not found" });
-    res.status(200).json({ message: "Bolo person deleted successfully" });
+      return api.sendError(res, 404, "Bolo or person not found");
+    api.sendSuccess(res, { message: "Bolo person deleted successfully" });
+
+    // Log
+    logAct({
+      user_id: req.user?.id || null,
+      entity_type: "bolo_person",
+      action: "delete",
+      entity_id: `${bolo_id}-${person_id}`,
+    });
   } catch (error) {
     console.error("[deleteBoloPerson] Error deleting bolo person:", error);
-    res.status(500).json({ message: "Internal server error" });
+    api.sendError(res, 500, "Internal server error");
   }
 }

@@ -4,8 +4,8 @@ import { dbPool as db } from "../config/database.js";
 
 Usage (inside controller):
 
-import { logActivity } from "../utils/logActivity.js";
-logActivity({
+import { logAct } from "../utils/logActivity.js";
+logAct({
   user_id: null, // Can be null for system actions
   action: "create", // e.g., "create", "update", "delete"
   entity_type: "role", // e.g., "user", "role", "permission"
@@ -14,12 +14,7 @@ logActivity({
 
 */
 
-export async function logActivity({
-  user_id,
-  entity_type,
-  action,
-  entity_id = null,
-}) {
+export async function logAct({ user_id, entity_type, action, entity_id }) {
   try {
     if (!entity_type || !action) {
       console.warn("[logActivity] Missing required parameters:", {
