@@ -26,6 +26,26 @@ export function isBoolean(value) {
   return typeof value === "boolean";
 }
 
+// Validate pagination parameters
+export function validatePaginationParams(page, pageSize) {
+  const errors = [];
+
+  // Page: required, positive integer
+  if (!isValidInteger(page) || page < 1) {
+    errors.push("Page must be a positive integer.");
+  }
+
+  // Page Size: required, positive integer
+  if (!isValidInteger(pageSize) || pageSize < 1) {
+    errors.push("Page size must be a positive integer.");
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+}
+
 // Validate Bolo //
 export function validateBolo(data) {
   const errors = [];

@@ -1,9 +1,10 @@
 import { dbPool as db } from "../config/database.js";
 import { buildInsertQuery, buildUpdateQuery } from "../utils/sqlHelpers.js";
+import { paginate } from "../utils/pagination.js";
 
 // Get all uncancelled bolos with limited details
-export async function getBoloSummary() {
-  const [rows] = await db.query(`
+export async function getBoloSummary(page = 1, pageSize = 10) {
+  const query = `
     SELECT
       b.id,
       b.type,
@@ -48,8 +49,9 @@ export async function getBoloSummary() {
     FROM bolos b
     WHERE b.status = 'active'
     ORDER BY b.priority DESC, b.created_at DESC
-  `);
-  return rows;
+  `;
+  const countQuery = `SELECT COUNT(*) as total FROM bolos WHERE status = 'active'`;
+  return paginate(query, page, pageSize, [], countQuery);
 }
 
 // Get all details from a specfic bolo from its id
@@ -96,7 +98,7 @@ export async function getBolo(id) {
     WHERE b.id = ?`,
     [id]
   );
-  return rows;
+  return rows[0] || null;
 }
 
 // Create new bolo
