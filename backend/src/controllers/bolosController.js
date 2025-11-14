@@ -103,7 +103,7 @@ export async function createBolo(req, res) {
       entity_type: "bolo",
       action: "create",
       entity_id: result.id,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[createBolo] Error creating bolo:", error);
     api.sendError(res, 500, "Internal server error");
@@ -157,7 +157,7 @@ export async function updateBolo(req, res) {
       entity_type: "bolo",
       action: "update",
       entity_id: updatedBolo.id,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[updateBolo] Error updating bolo:", error);
     api.sendError(res, 500, "Internal server error");
@@ -186,7 +186,7 @@ export async function deleteBolo(req, res) {
       entity_type: "bolo",
       action: "delete",
       entity_id: id,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[deleteBolo] Error deleting bolo:", error);
     api.sendError(res, 500, "Internal server error");
@@ -223,7 +223,7 @@ export async function createBoloVehicle(req, res) {
       entity_type: "bolo_vehicle",
       action: "create",
       entity_id: `${bolo_id}-${vehicle_id}`,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[createBoloVehicle] Error creating bolo vehicle:", error);
     api.sendError(res, 500, "Internal server error");
@@ -258,7 +258,7 @@ export async function deleteBoloVehicle(req, res) {
       entity_type: "bolo_vehicle",
       action: "delete",
       entity_id: `${bolo_id}-${vehicle_id}`,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[deleteBoloVehicle] Error deleting bolo vehicle:", error);
     api.sendError(res, 500, "Internal server error");
@@ -306,7 +306,7 @@ export async function createBoloPerson(req, res) {
       entity_type: "bolo_person",
       action: "create",
       entity_id: `${bolo_id}-${person_id}`,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[createBoloPerson] Error creating bolo person:", error);
     api.sendError(res, 500, "Internal server error");
@@ -350,7 +350,7 @@ export async function updateBoloPerson(req, res) {
       entity_type: "bolo_person",
       action: "update",
       entity_id: `${bolo_id}-${person_id}`,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[updateBoloPerson] Error updating bolo person:", error);
     api.sendError(res, 500, "Internal server error");
@@ -382,7 +382,7 @@ export async function deleteBoloPerson(req, res) {
       entity_type: "bolo_person",
       action: "delete",
       entity_id: `${bolo_id}-${person_id}`,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[deleteBoloPerson] Error deleting bolo person:", error);
     api.sendError(res, 500, "Internal server error");

@@ -56,7 +56,7 @@ export async function createRole(req, res) {
       entity_type: "role",
       action: "create",
       entity_id: newRole.id,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[createRole] Error creating role:", error);
     api.sendError(res, 500, "Internal server error");
@@ -105,7 +105,7 @@ export async function updateRole(req, res) {
       entity_type: "role",
       action: "update",
       entity_id: updatedRole.id,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[updateRole] Error updating role:", error);
     api.sendError(res, 500, "Internal server error");
@@ -134,7 +134,7 @@ export async function toggleRoleActiveStatus(req, res) {
       entity_type: "role",
       action: "toggle_active_status",
       entity_id: updatedRole.id,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error(
       "[toggleRoleActiveStatus] Error toggling active status:",
@@ -166,7 +166,7 @@ export async function deleteRole(req, res) {
       entity_type: "role",
       action: "delete",
       entity_id: id,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[deleteRole] Error deleting role:", error);
     api.sendError(res, 500, "Internal server error");
@@ -219,7 +219,7 @@ export async function createRoleCategory(req, res) {
       entity_type: "role_category",
       action: "create",
       entity_id: newCategory.id,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[createRoleCategory] Error creating role category:", error);
     api.sendError(res, 500, "Internal server error");
@@ -264,7 +264,7 @@ export async function updateRoleCategory(req, res) {
       entity_type: "role_category",
       action: "update",
       entity_id: updatedCategory.id,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[updateRoleCategory] Error updating role category:", error);
     api.sendError(res, 500, "Internal server error");
@@ -294,7 +294,7 @@ export async function toggleRoleCategoryActiveStatus(req, res) {
       entity_type: "role_category",
       action: "toggle_active_status",
       entity_id: updatedCategory.id,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error(
       "[toggleRoleCategoryActiveStatus] Error toggling active status:",
@@ -328,7 +328,7 @@ export async function deleteRoleCategory(req, res) {
       entity_type: "role_category",
       action: "delete",
       entity_id: id,
-    });
+    }).catch(() => {});
   } catch (error) {
     console.error("[deleteRoleCategory] Error deleting role category:", error);
     api.sendError(res, 500, "Internal server error");
