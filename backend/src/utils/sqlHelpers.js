@@ -44,3 +44,12 @@ export function buildUpdateQuery(
   )} WHERE ${idField} = ?`;
   return { query, values };
 }
+
+// Check if a record exists in a table by a specific field and value
+export async function recordExists(db, table, field, value) {
+  const [results] = await db.execute(
+    `SELECT COUNT(*) AS count FROM ${table} WHERE ${field} = ?`,
+    [value]
+  );
+  return results[0].count > 0;
+}
