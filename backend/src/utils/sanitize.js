@@ -1,5 +1,6 @@
 // Sanitize string input
 export function sanitizeString(value) {
+  if (typeof value !== "string") return "";
   // List of characters to remove: < > / \ ' "
   return value.replace(/[<>\/\\'"]/g, "");
 }
