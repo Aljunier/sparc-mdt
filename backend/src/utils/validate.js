@@ -128,3 +128,50 @@ export function validateUserNotification(data) {
     errors,
   };
 }
+
+// Validate User //
+export function validateUser(data, isNew = true) {
+  const errors = [];
+
+  // Username: required
+  if (
+    isNew &&
+    (!isNonEmptyString(data.username) || data.username.length > 30)
+  ) {
+    errors.push(
+      "Username is required and must be a non-empty string up to 30 characters."
+    );
+  }
+
+  // Password: required
+  if (
+    isNew &&
+    (!isNonEmptyString(data.password_hash) || data.password_hash.length < 8)
+  ) {
+    errors.push("Password is required and must be at least 8 characters long.");
+  }
+
+  // First Name: required
+  if (!isNonEmptyString(data.first_name) && data.first_name.length > 50) {
+    errors.push(
+      "First name is required and must be a non-empty string up to 50 characters."
+    );
+  }
+
+  // Last Name: required
+  if (!isNonEmptyString(data.last_name) && data.last_name.length > 75) {
+    errors.push(
+      "Last name is required and must be a non-empty string up to 75 characters."
+    );
+  }
+
+  // Call Sign: optional
+  if (!isNonEmptyString(data.call_sign) && data.call_sign.length > 10) {
+    errors.push("Call sign must be a string up to 10 characters.");
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+}
