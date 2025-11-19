@@ -1,5 +1,9 @@
 import { dbPool as db } from "../config/database.js";
-import { buildInsertQuery, buildUpdateQuery } from "../utils/sqlHelpers.js";
+import {
+  buildInsertQuery,
+  buildUpdateQuery,
+  recordExists,
+} from "../utils/sqlHelpers.js";
 
 // Roles //
 
@@ -14,6 +18,8 @@ export async function getAllRoles() {
 // Get Role by ID
 // Private helper function
 export async function getRole(id) {
+  const roleExists = await recordExists(db, "roles", "id", id);
+  if (!roleExists) return null;
   const [rows] = await db.execute(
     `SELECT id, category_id AS categoryId, name, is_active FROM roles WHERE id = ?`,
     [id]
