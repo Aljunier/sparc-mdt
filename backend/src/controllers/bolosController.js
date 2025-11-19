@@ -33,8 +33,7 @@ export async function getBoloSummary(req, res) {
       pagination: bolos.pagination,
     });
   } catch (error) {
-    console.error("[getBoloSummary] Error fetching bolo summary:", error);
-    api.sendError(res, 500, "Internal server error");
+    api.handleDatabaseError(error, res, "getBoloSummary");
   }
 }
 
@@ -54,8 +53,7 @@ export async function getBolo(req, res) {
     if (!bolo) return api.sendError(res, 404, "Bolo not found");
     api.sendSuccess(res, bolo);
   } catch (error) {
-    console.error("[getBolo] Error fetching bolo:", error);
-    api.sendError(res, 500, "Internal server error");
+    api.handleDatabaseError(error, res, "getBolo");
   }
 }
 
@@ -105,8 +103,7 @@ export async function createBolo(req, res) {
       entity_id: result.id,
     }).catch(() => {});
   } catch (error) {
-    console.error("[createBolo] Error creating bolo:", error);
-    api.sendError(res, 500, "Internal server error");
+    api.handleDatabaseError(error, res, "createBolo");
   }
 }
 
@@ -159,8 +156,7 @@ export async function updateBolo(req, res) {
       entity_id: updatedBolo.id,
     }).catch(() => {});
   } catch (error) {
-    console.error("[updateBolo] Error updating bolo:", error);
-    api.sendError(res, 500, "Internal server error");
+    api.handleDatabaseError(error, res, "updateBolo");
   }
 }
 
@@ -188,8 +184,7 @@ export async function deleteBolo(req, res) {
       entity_id: id,
     }).catch(() => {});
   } catch (error) {
-    console.error("[deleteBolo] Error deleting bolo:", error);
-    api.sendError(res, 500, "Internal server error");
+    api.handleDatabaseError(error, res, "deleteBolo");
   }
 }
 
@@ -225,8 +220,7 @@ export async function createBoloVehicle(req, res) {
       entity_id: `${bolo_id}-${vehicle_id}`,
     }).catch(() => {});
   } catch (error) {
-    console.error("[createBoloVehicle] Error creating bolo vehicle:", error);
-    api.sendError(res, 500, "Internal server error");
+    api.handleDatabaseError(error, res, "createBoloVehicle");
   }
 }
 
@@ -260,8 +254,7 @@ export async function deleteBoloVehicle(req, res) {
       entity_id: `${bolo_id}-${vehicle_id}`,
     }).catch(() => {});
   } catch (error) {
-    console.error("[deleteBoloVehicle] Error deleting bolo vehicle:", error);
-    api.sendError(res, 500, "Internal server error");
+    api.handleDatabaseError(error, res, "deleteBoloVehicle");
   }
 }
 
@@ -308,8 +301,7 @@ export async function createBoloPerson(req, res) {
       entity_id: `${bolo_id}-${person_id}`,
     }).catch(() => {});
   } catch (error) {
-    console.error("[createBoloPerson] Error creating bolo person:", error);
-    api.sendError(res, 500, "Internal server error");
+    api.handleDatabaseError(error, res, "createBoloPerson");
   }
 }
 
@@ -352,8 +344,7 @@ export async function updateBoloPerson(req, res) {
       entity_id: `${bolo_id}-${person_id}`,
     }).catch(() => {});
   } catch (error) {
-    console.error("[updateBoloPerson] Error updating bolo person:", error);
-    api.sendError(res, 500, "Internal server error");
+    api.handleDatabaseError(error, res, "updateBoloPerson");
   }
 }
 
@@ -384,7 +375,6 @@ export async function deleteBoloPerson(req, res) {
       entity_id: `${bolo_id}-${person_id}`,
     }).catch(() => {});
   } catch (error) {
-    console.error("[deleteBoloPerson] Error deleting bolo person:", error);
-    api.sendError(res, 500, "Internal server error");
+    api.handleDatabaseError(error, res, "deleteBoloPerson");
   }
 }
