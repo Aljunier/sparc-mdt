@@ -79,7 +79,7 @@ export async function createBolo(req, res) {
       priority: body.priority
         ? sanitizeEnum(body.priority, ["low", "medium", "high"])
         : null,
-      // Current date + 7 days
+      // Current date + 7 days if not provided
       expires_at: body.expires_at
         ? sanitizeDate(body.expires_at)
         : new Date(Date.now() + 24 * 60 * 60 * 1000 * 7),
@@ -131,7 +131,7 @@ export async function updateBolo(req, res) {
         null
       ),
       priority: sanitizeEnum(body.priority, ["low", "medium", "high"], null),
-      // Current date + 7 days
+      // Current date + 7 days if not provided
       expires_at: body.expires_at
         ? sanitizeDate(body.expires_at)
         : new Date(Date.now() + 24 * 60 * 60 * 1000 * 7),
@@ -228,7 +228,7 @@ export async function deleteBoloVehicle(req, res) {
   try {
     // Sanitize
     const bolo_id = sanitizeInteger(req.params.bolo_id);
-    const vehicle_id = sanitizeInteger(req.params.id);
+    const vehicle_id = sanitizeInteger(req.params.vehicle_id);
 
     // Validate
     if (!isValidInteger(bolo_id)) {

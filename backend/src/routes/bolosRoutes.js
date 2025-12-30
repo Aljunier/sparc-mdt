@@ -26,7 +26,10 @@ router.delete("/:id", bolosController.deleteBolo);
 router.post("/:bolo_id/vehicles/", bolosController.createBoloVehicle);
 
 // Detach a vehicle from a specific bolo by bolo ID and vehicle ID
-router.delete("/:bolo_id/vehicles/:id", bolosController.deleteBoloVehicle);
+router.delete(
+  "/:bolo_id/vehicles/:vehicle_id",
+  bolosController.deleteBoloVehicle
+);
 
 ///  api/bolos/persons/  ///
 
@@ -34,9 +37,9 @@ router.delete("/:bolo_id/vehicles/:id", bolosController.deleteBoloVehicle);
 router.post("/:bolo_id/persons/", bolosController.createBoloPerson);
 
 // Update a person attached to a specific bolo by bolo ID and person ID
-router.put("/:bolo_id/persons/:id", bolosController.updateBoloPerson);
+router.put("/:bolo_id/persons/:person_id", bolosController.updateBoloPerson);
 
 // Detach a person from a specific bolo by bolo ID and person ID
-router.delete("/:bolo_id/persons/:id", bolosController.deleteBoloPerson);
+router.delete("/:bolo_id/persons/:person_id", bolosController.deleteBoloPerson);
 
 export default router;

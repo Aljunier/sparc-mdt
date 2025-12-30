@@ -37,6 +37,7 @@ export async function getBoloSummary(page = 1, pageSize = 10) {
             'first_name', p.first_name,
             'middle_name', p.middle_name,
             'last_name', p.last_name,
+            'sex', p.sex,
             'dob', p.dob,
             'license_number', p.license_number,
             'license_state', p.license_state
@@ -85,6 +86,7 @@ export async function getBolo(id) {
             'first_name', p.first_name,
             'middle_name', p.middle_name,
             'last_name', p.last_name,
+            'sex', p.sex,
             'dob', p.dob,
             'license_number', p.license_number,
             'license_state', p.license_state

@@ -1,6 +1,9 @@
 // Check if a value is a non-empty string
-export function isNonEmptyString(value) {
-  return typeof value === "string" && value.trim().length > 0;
+export function isNonEmptyString(value, maxLength = Infinity, minLength = 1) {
+  const length = value.trim().length;
+  return (
+    typeof value === "string" && length >= minLength && length <= maxLength
+  );
 }
 
 // Check if a value is a valid integer
@@ -88,6 +91,53 @@ export function validateBolo(data) {
   // Options: low, medium, high
   if (data.priority && !isValidEnum(data.priority, ["low", "medium", "high"])) {
     errors.push("Priority must be one of: low, medium, high.");
+  }
+
+  // Expires at: optional
+  if (data.expires_at && !isValidDate(data.expires_at)) {
+    errors.push("Expires at must be a valid date.");
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+}
+
+// Validate Warrant //
+export function validateWarrant(data) {
+  const errors = [];
+
+  // Issued by: required
+  if (!isValidInteger(data.issued_by)) {
+    errors.push("Issued by must be a valid integer.");
+  }
+
+  // Person ID: required
+  if (!isValidInteger(data.person_id)) {
+    errors.push("Person ID must be a valid integer.");
+  }
+
+  // Report ID: optional
+  if (data.report_id && !isValidInteger(data.report_id, true)) {
+    errors.push("Report ID must be a valid integer.");
+  }
+
+  // Type: required
+  // Options: arrest, search, bench, other
+  if (!isValidEnum(data.type, ["arrest", "search", "bench", "other"])) {
+    errors.push("Type must be one of: arrest, search, bench, other.");
+  }
+
+  // Description: required
+  if (!isNonEmptyString(data.description)) {
+    errors.push("Description is required and must be a non-empty string.");
+  }
+
+  // Status: required
+  // Options: active, served, revoked, expired
+  if (!isValidEnum(data.status, ["active", "served", "revoked", "expired"])) {
+    errors.push("Status must be one of: active, served, revoked, expired.");
   }
 
   // Expires at: optional
