@@ -45,6 +45,101 @@ export function buildUpdateQuery(
   return { query, values };
 }
 
+// Build a WHERE clause from filters object
+export function buildWhereClause(filters) {
+  const conditions = [];
+  const values = [];
+
+  for (const [field, config] of Object.entries(filters)) {
+    if (
+      config.value === undefined ||
+      config.value === null ||
+      config.value === ""
+    ) {
+      continue; // Skip empty/null values
+    }
+
+    const operator = config.operator || "=";
+    const column = config.column || field;
+
+    switch (operator) {
+      case "LIKE":
+        conditions.push(`${column} LIKE ?`);
+        values.push(`%${config.value}%`);
+        break;
+
+      case "=":
+      case ">":
+      case "<":
+      case ">=":
+      case "<=":
+      case "!=":
+        conditions.push(`${column} ${operator} ?`);
+        values.push(config.value);
+        break;
+
+      case "IN":
+        if (Array.isArray(config.value) && config.value.length > 0) {
+          const placeholders = config.value.map(() => "?").join(", ");
+          conditions.push(`${column} IN (${placeholders})`);
+          values.push(...config.value);
+        }
+        break;
+
+      case "BETWEEN":
+        if (config.value.min !== undefined && config.value.max !== undefined) {
+          conditions.push(`${column} BETWEEN ? AND ?`);
+          values.push(config.value.min, config.value.max);
+        }
+        break;
+
+      case "IS NULL":
+        conditions.push(`${column} IS NULL`);
+        break;
+
+      case "IS NOT NULL":
+        conditions.push(`${column} IS NOT NULL`);
+        break;
+
+      default:
+        throw new Error(`Unsupported operator: ${operator}`);
+    }
+  }
+
+  const whereClause =
+    conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+  return { whereClause, values };
+}
+
+// Generalized select query function with filters and ordering
+export async function selectWithFilters({
+  table,
+  select = "*",
+  filters = {},
+  orderBy = "created_at DESC",
+  joins = "",
+}) {
+  const { whereClause, values } = buildWhereClause(filters);
+
+  const query = `
+    SELECT ${select}
+    FROM ${table}
+    ${joins}
+    ${whereClause}
+    ORDER BY ${orderBy}
+  `;
+
+  const countQuery = `
+    SELECT COUNT(*) as total
+    FROM ${table}
+    ${joins}
+    ${whereClause}
+  `;
+
+  return { query, values, countQuery };
+}
+
 // Check if a record exists in a table by a specific field and value
 export async function recordExists(db, table, field, value) {
   const [results] = await db.execute(
