@@ -1,6 +1,6 @@
-import { dbPool as db } from "../config/database.js";
-import { buildInsertQuery, buildUpdateQuery } from "../utils/sqlHelpers.js";
-import { paginate } from "../utils/pagination.js";
+import { dbPool as db } from "#config/database";
+import { buildInsertQuery, buildUpdateQuery } from "#utils/sqlHelpers";
+import { paginate } from "#utils/pagination";
 
 // Get all active warrants with limited details
 export async function getWarrantSummary(page = 1, pageSize = 10) {

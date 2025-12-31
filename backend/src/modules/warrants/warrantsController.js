@@ -1,18 +1,18 @@
-import * as Warrant from "../models/Warrant.js";
+import * as Warrant from "./warrantsModel.js";
+import * as api from "#utils/apiResponse";
+import { logAct } from "#utils/logActivity";
 import {
   sanitizeString,
   sanitizeInteger,
   sanitizeEnum,
   sanitizeDate,
-} from "../utils/sanitize.js";
+} from "#utils/sanitize";
 import {
   validateWarrant,
   isValidInteger,
   isValidEnum,
   validatePaginationParams,
-} from "../utils/validate.js";
-import * as api from "../utils/apiResponse.js";
-import { logAct } from "../utils/logActivity.js";
+} from "#utils/validate";
 
 // Get all uncancelled warrants with limited details
 export async function getWarrantSummary(req, res) {

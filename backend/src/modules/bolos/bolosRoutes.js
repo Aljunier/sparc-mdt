@@ -1,5 +1,5 @@
 import express from "express";
-import * as bolosController from "../controllers/bolosController.js";
+import * as bolosController from "./bolosController.js";
 
 const router = express.Router();
 

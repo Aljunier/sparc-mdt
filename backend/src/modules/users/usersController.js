@@ -1,9 +1,7 @@
-import * as User from "../models/Users.js";
-import {
-  sanitizeString,
-  sanitizeInteger,
-  sanitizeDate,
-} from "../utils/sanitize.js";
+import * as User from "./usersModel.js";
+import * as api from "#utils/apiResponse";
+import { logAct } from "#utils/logActivity";
+import { sanitizeString, sanitizeInteger, sanitizeDate } from "#utils/sanitize";
 import {
   isNonEmptyString,
   isValidInteger,
@@ -11,9 +9,7 @@ import {
   validateUserNotification,
   validatePaginationParams,
   validateUser,
-} from "../utils/validate.js";
-import * as api from "../utils/apiResponse.js";
-import { logAct } from "../utils/logActivity.js";
+} from "#utils/validate";
 
 /// Users ///
 

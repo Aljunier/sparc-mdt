@@ -1,9 +1,9 @@
-import { dbPool as db } from "../config/database.js";
+import { dbPool as db } from "#config/database";
 import {
   buildInsertQuery,
   buildUpdateQuery,
   recordExists,
-} from "../utils/sqlHelpers.js";
+} from "#utils/sqlHelpers";
 
 // Roles //
 

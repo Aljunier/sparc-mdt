@@ -1,11 +1,11 @@
 import express from "express";
 
 // Import route modules
-import bolosRoutes from "./bolosRoutes.js";
-import warrantsRoutes from "./warrantsRoutes.js";
-import rolesRoutes from "./rolesRoutes.js";
-import usersRoutes from "./usersRoutes.js";
-import vehiclesRoutes from "./vehiclesRoutes.js";
+import bolosRoutes from "#modules/bolos/bolosRoutes";
+import warrantsRoutes from "#modules/warrants/warrantsRoutes";
+import rolesRoutes from "#modules/roles/rolesRoutes";
+import usersRoutes from "#modules/users/usersRoutes";
+import vehiclesRoutes from "#modules/vehicles/vehiclesRoutes";
 
 const router = express.Router();
 
