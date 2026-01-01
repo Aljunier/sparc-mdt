@@ -3,15 +3,15 @@ import {
   sanitizeString,
   sanitizeInteger,
   sanitizeEnum,
-} from "#utils/sanitize.js";
+} from "#utils/sanitize";
 import {
   isValidInteger,
   isValidEnum,
   isNonEmptyString,
   validatePaginationParams,
-} from "#utils/validate.js";
-import * as api from "#utils/apiResponse.js";
-import { logAct } from "#utils/logActivity.js";
+} from "#utils/validate";
+import * as api from "#utils/apiResponse";
+import { logAct } from "#utils/logActivity";
 
 // Get Statute by ID
 export async function getStatuteById(req, res) {
