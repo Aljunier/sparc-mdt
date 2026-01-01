@@ -161,15 +161,15 @@ export async function createVehicle(req, res) {
     }
 
     // Create
-    const newVehicleId = await Vehicle.createVehicle(sanitizedData);
-    api.sendSuccess(res, await Vehicle.getVehicleById(newVehicleId), 201);
+    const newVehicle = await Vehicle.createVehicle(sanitizedData);
+    api.sendSuccess(res, newVehicle, 201);
 
     // Log
     logAct({
       user_id: false,
       entity_type: "vehicle",
       action: "create",
-      entity_id: newVehicleId,
+      entity_id: newVehicle.id,
     }).catch(() => {});
   } catch (error) {
     return api.handleDatabaseError(error, res, "createVehicle");
@@ -270,9 +270,7 @@ export async function deleteVehicle(req, res) {
 
     // Delete
     const deleteSuccess = await Vehicle.deleteVehicle(id);
-    if (!deleteSuccess) {
-      return api.sendError(res, 404, "Vehicle not found.");
-    }
+    if (!deleteSuccess) return api.sendError(res, 404, "Vehicle not found.");
     api.sendSuccess(res, { message: "Vehicle deleted successfully." }, 200);
 
     // Log

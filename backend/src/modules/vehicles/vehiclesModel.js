@@ -47,7 +47,7 @@ export async function searchVehicles(
 export async function createVehicle(fields) {
   const { query, values } = buildInsertQuery("vehicles", fields);
   const [result] = await db.execute(query, values);
-  return result.insertId;
+  return getVehicleById(result.insertId);
 }
 
 // Update existing vehicle record
