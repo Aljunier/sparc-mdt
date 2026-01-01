@@ -16,6 +16,9 @@ logAct({
 
 export async function logAct({ user_id, entity_type, action, entity_id }) {
   try {
+    // Default user_id to null if not provided
+    user_id = user_id || null;
+
     if (!entity_type || !action) {
       console.warn("[logActivity] Missing required parameters:", {
         user_id,
