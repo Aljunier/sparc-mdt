@@ -8,6 +8,7 @@ import usersRoutes from "#modules/users/usersRoutes";
 import vehiclesRoutes from "#modules/vehicles/vehiclesRoutes";
 import personsRoutes from "#modules/persons/personsRoutes";
 import statutesRoutes from "#modules/statutes/statutesRoutes";
+import finesRoutes from "#modules/fines/finesRoutes";
 
 const router = express.Router();
 
@@ -18,5 +19,6 @@ router.use("/users", usersRoutes);
 router.use("/vehicles", vehiclesRoutes);
 router.use("/persons", personsRoutes);
 router.use("/statutes", statutesRoutes);
+router.use("/fines", finesRoutes);
 
 export default router;
