@@ -6,6 +6,7 @@ import warrantsRoutes from "#modules/warrants/warrantsRoutes";
 import rolesRoutes from "#modules/roles/rolesRoutes";
 import usersRoutes from "#modules/users/usersRoutes";
 import vehiclesRoutes from "#modules/vehicles/vehiclesRoutes";
+import personsRoutes from "#modules/persons/personsRoutes";
 
 const router = express.Router();
 
@@ -14,5 +15,6 @@ router.use("/warrants", warrantsRoutes);
 router.use("/roles", rolesRoutes);
 router.use("/users", usersRoutes);
 router.use("/vehicles", vehiclesRoutes);
+router.use("/persons", personsRoutes);
 
 export default router;
