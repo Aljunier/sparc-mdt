@@ -94,7 +94,12 @@ export async function createRoleCategory(fields) {
 // Update Role Category
 // Expected fields: { name, is_active (optional) }
 export async function updateRoleCategory(id, fields) {
-  const { query, values } = buildUpdateQuery("role_categories", fields, "id");
+  const { query, values } = buildUpdateQuery(
+    "role_categories",
+    fields,
+    [],
+    "id"
+  );
   const [result] = await db.execute(query, [...values, id]);
   return result.affectedRows > 0 ? getRoleCategory(id) : false;
 }
