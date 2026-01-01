@@ -1,12 +1,13 @@
 import express from "express";
 
 // Import route modules
-import bolosRoutes from "./bolosRoutes.js";
-import warrantsRoutes from "./warrantsRoutes.js";
-import rolesRoutes from "./rolesRoutes.js";
-import usersRoutes from "./usersRoutes.js";
-import vehiclesRoutes from "./vehiclesRoutes.js";
-import statutesRoutes from "./statutesRoutes.js";
+import bolosRoutes from "#modules/bolos/bolosRoutes";
+import warrantsRoutes from "#modules/warrants/warrantsRoutes";
+import rolesRoutes from "#modules/roles/rolesRoutes";
+import usersRoutes from "#modules/users/usersRoutes";
+import vehiclesRoutes from "#modules/vehicles/vehiclesRoutes";
+import personsRoutes from "#modules/persons/personsRoutes";
+import statutesRoutes from "#modules/statutes/statutesRoutes";
 
 const router = express.Router();
 
@@ -15,6 +16,7 @@ router.use("/warrants", warrantsRoutes);
 router.use("/roles", rolesRoutes);
 router.use("/users", usersRoutes);
 router.use("/vehicles", vehiclesRoutes);
+router.use("/persons", personsRoutes);
 router.use("/statutes", statutesRoutes);
 
 export default router;

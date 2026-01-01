@@ -1,8 +1,15 @@
 {
   "name": "sparc-backend",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "src/server.js",
+  "imports": {
+    "#config/*": "./src/config/*.js",
+    "#modules/*": "./src/modules/*.js",
+    "#routes/*": "./src/routes/*.js",
+    "#utils/*": "./src/utils/*.js"
+  },
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js"
@@ -10,7 +17,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",

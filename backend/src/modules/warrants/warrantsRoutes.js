@@ -1,5 +1,5 @@
 import express from "express";
-import * as warrantsController from "../controllers/warrantsController.js";
+import * as warrantsController from "./warrantsController.js";
 
 const router = express.Router();
 

@@ -2,8 +2,8 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import "dotenv/config";
-import routes from "./routes/index.js";
-import { testDbConnection } from "./config/database.js";
+import routes from "#routes/index";
+import { testDbConnection } from "#config/database";
 
 const app = express();
 const PORT = process.env.PORT || 3050;
@@ -11,7 +11,9 @@ const __dirname = path.resolve();
 
 testDbConnection();
 
-// Middleware
+// Middleware //
+
+// Enable CORS for development
 if (process.env.NODE_ENV !== "production") {
   app.use(
     cors({
@@ -21,10 +23,10 @@ if (process.env.NODE_ENV !== "production") {
 }
 app.use(express.json());
 
-// Routes
+// Routes //
 app.use("/api", routes);
 
-// Serve frontend in production
+// Serve frontend in production //
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
@@ -33,7 +35,7 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// Start server
+// Start server //
 app.listen(PORT, () => {
   console.log("Server started on PORT: ", PORT);
 });

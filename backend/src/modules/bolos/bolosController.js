@@ -1,18 +1,18 @@
-import * as Bolo from "../models/Bolo.js";
+import * as Bolo from "./bolosModel.js";
+import * as api from "#utils/apiResponse";
+import { logAct } from "#utils/logActivity";
 import {
   sanitizeString,
   sanitizeInteger,
   sanitizeEnum,
   sanitizeDate,
-} from "../utils/sanitize.js";
+} from "#utils/sanitize";
 import {
   validateBolo,
   isValidInteger,
   isValidEnum,
   validatePaginationParams,
-} from "../utils/validate.js";
-import * as api from "../utils/apiResponse.js";
-import { logAct } from "../utils/logActivity.js";
+} from "#utils/validate";
 
 // Get all uncancelled bolos with limited details
 export async function getBoloSummary(req, res) {

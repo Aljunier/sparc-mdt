@@ -1,10 +1,10 @@
-import { dbPool as db } from "../config/database.js";
+import { dbPool as db } from "#config/database";
+import { paginate } from "#utils/pagination";
 import {
   buildInsertQuery,
   buildUpdateQuery,
   selectWithFilters,
-} from "../utils/sqlHelpers.js";
-import { paginate } from "../utils/pagination.js";
+} from "#utils/sqlHelpers";
 
 // Get vehicle by ID
 export async function getVehicleById(id) {

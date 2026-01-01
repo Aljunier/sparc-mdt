@@ -1,12 +1,12 @@
-import * as Role from "../models/Role.js";
+import * as Role from "./rolesModel.js";
+import { isValidInteger } from "#utils/validate";
+import * as api from "#utils/apiResponse";
+import { logAct } from "#utils/logActivity";
 import {
   sanitizeString,
   sanitizeInteger,
   sanitizeBoolean,
-} from "../utils/sanitize.js";
-import { isValidInteger } from "../utils/validate.js";
-import * as api from "../utils/apiResponse.js";
-import { logAct } from "../utils/logActivity.js";
+} from "#utils/sanitize";
 
 // Roles //
 
